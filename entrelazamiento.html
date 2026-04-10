@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Cuántico: Acción Fantasmagórica en los Confines del Universo</title>
+    <style>
+        :root {
+            --quantum-blue: #00d2ff;
+            --quantum-purple: #9d50bb;
+            --text-light: #e0e0e0;
+            --bg-dark: #05050a;
+            --label-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fondo de Universo con la imagen galaxia.png */
+        .universe-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('galaxia.png'); /* Imagen actualizada */
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+            opacity: 0.8; /* Mantiene la legibilidad de la interfaz */
+        }
+
+        /* Contenedor de Partículas (Viewport) */
+        #viewport {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .particle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            position: absolute;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        /* Posiciones iniciales juntas */
+        #particle-a { background: var(--quantum-blue); box-shadow: 0 0 40px var(--quantum-blue); left: calc(50% - 35px); top: 50%; }
+        #particle-b { background: var(--quantum-purple); box-shadow: 0 0 40px var(--quantum-purple); left: calc(50% + 5px); top: 50%; }
+
+        /* Hilo de Entrelazamiento */
+        #string {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 5;
+        }
+
+        /* Rayo de Luz Limitador */
+        #light-ray {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px white, 0 0 30px var(--quantum-blue);
+            opacity: 0;
+            z-index: 6;
+            transition: none;
+        }
+
+        /* Etiqueta del Rayo de Luz */
+        #light-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: black;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 2px 8px;
+            background-color: var(--label-bg);
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* Interfaz de Texto */
+        .info-panel {
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 2px solid var(--quantum-blue);
+            padding: 20px;
+            height: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+
+        .text-container {
+            max-width: 800px;
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            height: 130px;
+            color: #d1d1d1;
+            overflow-y: auto;
+        }
+
+        .controls { display: flex; gap: 15px; }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid #444;
+            transition: 0.3s;
+        }
+
+        button:hover:not(:disabled) { background: var(--quantum-blue); color: black; border-color: white; }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .highlight { color: var(--quantum-blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="universe-background"></div>
+
+<div id="viewport">
+    <div id="string"></div>
+    <div id="light-ray"><span id="light-label">Velocidad de la luz &rarr;</span></div>
+    <div id="particle-a" class="particle">?</div>
+    <div id="particle-b" class="particle">?</div>
+</div>
+
+<div class="info-panel">
+    <div class="text-container" id="narration">
+        Bienvenido al experimento EPR. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.
+    </div>
+    <div class="controls">
+        <button id="btn-gen">Generar Par</button>
+        <button id="btn-measure" disabled>Medir Partícula A</button>
+        <button id="btn-interpret" disabled>Interpretación</button>
+    </div>
+</div>
+
+<script>
+    const pA = document.getElementById('particle-a');
+    const pB = document.getElementById('particle-b');
+    const string = document.getElementById('string');
+    const ray = document.getElementById('light-ray');
+    const narration = document.getElementById('narration');
+    const label = document.getElementById('light-label');
+    
+    const btnGen = document.getElementById('btn-gen');
+    const btnMeasure = document.getElementById('btn-measure');
+    const btnInterpret = document.getElementById('btn-interpret');
+
+    btnGen.onclick = () => {
+        pA.style.left = "calc(50% - 35px)";
+        pB.style.left = "calc(50% + 5px)";
+        pA.style.top = "50%";
+        pB.style.top = "50%";
+        pA.innerHTML = "?";
+        pB.innerHTML = "?";
+        pA.style.transform = "none";
+        pB.style.transform = "none";
+        string.style.opacity = "0";
+        ray.style.opacity = "0";
+        btnMeasure.disabled = true;
+        btnInterpret.disabled = true;
+
+        narration.innerHTML = `<span class="highlight">Fase de Incertidumbre:</span> Al presionar "Generar Par", las partículas aparecen con un signo de interrogación. Filosóficamente, aquí puedes explicar que no están en ningún estado definido, sino en una superposición. La línea que las une representa la "función de onda" compartida.`;
+
+        setTimeout(() => {
+            pA.animate([{ left: '15%' }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
+            pB.animate([{ left: '85%' }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
+            
+            setTimeout(() => {
+                const rectA = pA.getBoundingClientRect();
+                const rectB = pB.getBoundingClientRect();
+                const startX = rectA.right + 10;
+                const endX = rectB.left - 10;
+                string.style.width = (endX - startX) + "px";
+                string.style.left = startX + "px";
+                string.style.top = (rectA.top + rectA.height/2) + "px";
+                string.style.opacity = "0.4";
+                btnMeasure.disabled = false;
+            }, 3000);
+        }, 100);
+
+        btnGen.disabled = true;
+    };
+
+    btnMeasure.onclick = () => {
+        const resultA = Math.random() > 0.5 ? "↑" : "↓";
+        const resultB = resultA === "↑" ? "↓" : "↑";
+
+        pA.innerHTML = resultA;
+        pB.innerHTML = resultB;
+        pA.style.transform = "scale(1.2)";
+        pB.style.transform = "scale(1.2)";
+        string.style.opacity = "0";
+
+        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Cuando el estudiante presiona "Medir Partícula A", el código decide aleatoriamente el estado de A. Pero —y aquí está el rigor científico— el estado de B se asigna automáticamente como el opuesto (conservación del momento angular).`;
+
+        const rectA = pA.getBoundingClientRect();
+        const rectB = pB.getBoundingClientRect();
+        ray.style.left = rectA.right + "px";
+        ray.style.top = (rectA.top + rectA.height/2) + "px";
+        ray.style.opacity = "1";
+        
+        ray.animate([
+            { left: rectA.right + 'px' },
+            { left: rectB.left + 'px' }
+        ], { duration: 5000, iterations: 1 });
+
+        btnMeasure.disabled = true;
+        btnInterpret.disabled = false;
+    };
+
+    btnInterpret.onclick = () => {
+        narration.innerHTML = `<span class="highlight">La Lección de Realismo:</span> Debes hacer notar que la Partícula B cambió su estado en el mismo milisegundo que A. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. <br><strong>Esto demuestra la No-localidad.</strong>`;
+        btnGen.disabled = false;
+        btnInterpret.disabled = true;
+    };
+</script>
+
+</body>
+</html>
