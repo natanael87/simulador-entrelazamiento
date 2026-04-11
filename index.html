@@ -62,6 +62,19 @@
             z-index: 10;
         }
 
+        /* --- Novedad: Estilos para las Etiquetas A y B --- */
+        .particle-label {
+            position: absolute;
+            top: -32px;
+            font-size: 16px;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+        }
+
         /* Posiciones iniciales juntas */
         #particle-a { background: var(--quantum-blue); box-shadow: 0 0 40px var(--quantum-blue); left: calc(50% - 35px); top: 50%; }
         #particle-b { background: var(--quantum-purple); box-shadow: 0 0 40px var(--quantum-purple); left: calc(50% + 5px); top: 50%; }
@@ -69,7 +82,7 @@
         /* Hilo de Entrelazamiento */
         #string {
             position: absolute;
-            height: 5px;
+            height: 6px;
             background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
             opacity: 1;
             transition: opacity 0.5s;
@@ -79,8 +92,8 @@
         /* Rayo de Luz Limitador */
         #light-ray {
             position: absolute;
-            width: 14px;
-            height: 14px;
+            width: 15px;
+            height: 15px;
             background: #ffff00; /* Amarillo puro */
             border-radius: 50%;
             box-shadow: 0 0 15px #ffff00, 0 0 30px #ffcc00;
@@ -97,10 +110,10 @@
             transform: translateX(-50%);
             color: black;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px;
             padding: 2px 8px;
             background-color: var(--label-bg);
-            border-radius: 4px;
+            border-radius: 5px;
             white-space: nowrap;
         }
 
@@ -147,6 +160,10 @@
         button:hover:not(:disabled) { background: var(--quantum-blue); color: black; border-color: white; }
         button:disabled { opacity: 0.3; cursor: not-allowed; }
 
+        /* Color específico para el botón de reinicio */
+        #btn-reset { border-color: #d9534f; }
+        #btn-reset:hover { background: #d9534f; color: white; }
+
         .highlight { color: var(--quantum-blue); font-weight: bold; }
     </style>
 </head>
@@ -157,24 +174,38 @@
 <div id="viewport">
     <div id="string"></div>
     <div id="light-ray"><span id="light-label">Velocidad de la luz &rarr;</span></div>
-    <div id="particle-a" class="particle">?</div>
-    <div id="particle-b" class="particle">?</div>
+    
+    <div id="particle-a" class="particle">
+        <span class="particle-label">A</span>
+        <span id="state-a">?</span>
+    </div>
+    <div id="particle-b" class="particle">
+        <span class="particle-label">B</span>
+        <span id="state-b">?</span>
+    </div>
 </div>
 
 <div class="info-panel">
     <div class="text-container" id="narration">
-        Bienvenido al experimento EPR. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.
+        <br><strong>Bienvenido al simulador, comenzamos preparando un par de partículas en lo que los físicos llamamos un "estado singlete". Esto significa que el sistema tiene un espín total de cero. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.</strong>
     </div>
     <div class="controls">
         <button id="btn-gen">Generar Par</button>
         <button id="btn-measure" disabled>Medir Partícula A</button>
         <button id="btn-interpret" disabled>Interpretación</button>
+        <button id="btn-reset">Reiniciar</button> 
     </div>
 </div>
 
 <script>
+    // Referencias a los contenedores principales de las partículas
     const pA = document.getElementById('particle-a');
     const pB = document.getElementById('particle-b');
+    
+    // Referencias específicas a los símbolos que cambian ("?" o "↑"/"↓")
+    const stateA = document.getElementById('state-a');
+    const stateB = document.getElementById('state-b');
+    
     const string = document.getElementById('string');
     const ray = document.getElementById('light-ray');
     const narration = document.getElementById('narration');
@@ -183,14 +214,21 @@
     const btnGen = document.getElementById('btn-gen');
     const btnMeasure = document.getElementById('btn-measure');
     const btnInterpret = document.getElementById('btn-interpret');
+    const btnReset = document.getElementById('btn-reset');
+
+    // Variables para guardar los temporizadores
+    let timeoutString, timeoutAnim;
 
     btnGen.onclick = () => {
         pA.style.left = "calc(50% - 35px)";
         pB.style.left = "calc(50% + 5px)";
         pA.style.top = "50%";
         pB.style.top = "50%";
-        pA.innerHTML = "?";
-        pB.innerHTML = "?";
+        
+        // Modificamos solo el texto del estado, no la etiqueta superior
+        stateA.innerHTML = "?";
+        stateB.innerHTML = "?";
+        
         pA.style.transform = "none";
         pB.style.transform = "none";
         string.style.opacity = "0";
@@ -198,13 +236,14 @@
         btnMeasure.disabled = true;
         btnInterpret.disabled = true;
 
-        narration.innerHTML = `<span class="highlight">Fase de Incertidumbre:</span> Al presionar "Generar Par", las partículas aparecen con un signo de interrogación indicando que inician su viaje en un estado de superposición). Filosóficamente, esto representa la ruptura con el realismo clásico: las partículas no poseen propiedades definidas 'en sí mismas' antes de la medición, sino en una superposición: su realidad solo se concreta mediante el acto de observación. La línea que las une representa la "función de onda" compartida.`;
+        narration.innerHTML = `<span class="highlight">Fase de Incertidumbre:</span> Las partículas aparecen con un signo de interrogación indicando que no poseen propiedades definidas 'en sí mismas' antes de la medición, sino en una superposición: todas las posibilidades coexisten en un espacio matemático abstracto llamado <br><strong>espacio de configuración</strong>. No es que la información esté "escondida", es que la propiedad misma del espín no está definida aún. La línea que las unirá representa la "función de onda" compartida.`;
+    
 
-        setTimeout(() => {
+        timeoutAnim = setTimeout(() => {
             pA.animate([{ left: '15%' }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
             pB.animate([{ left: '85%' }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
             
-            setTimeout(() => {
+            timeoutString = setTimeout(() => {
                 const rectA = pA.getBoundingClientRect();
                 const rectB = pB.getBoundingClientRect();
                 const startX = rectA.right + 10;
@@ -224,13 +263,15 @@
         const resultA = Math.random() > 0.5 ? "↑" : "↓";
         const resultB = resultA === "↑" ? "↓" : "↑";
 
-        pA.innerHTML = resultA;
-        pB.innerHTML = resultB;
+        // Actualizamos el estado interno sin borrar las etiquetas A y B
+        stateA.innerHTML = resultA;
+        stateB.innerHTML = resultB;
+        
         pA.style.transform = "scale(1.2)";
         pB.style.transform = "scale(1.2)";
         string.style.opacity = "0";
 
-        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Aquí presencias un hecho científico fundamental: al definir el estado de A, la partícula B adquiere instantáneamente el valor opuesto para cumplir con las leyes de conservación. El cambio de estado fue en el mismo milisegundo. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. Esto demuestra la <br><strong>No-localidad.</strong> La ciencia confirma la existencia de esta correlación perfecta, pero la ontología se divide en su interpretación... `;
+        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Al definir el estado de A, la partícula B adquiere instantáneamente el valor opuesto para cumplir con las leyes de conservación. El cambio de estado fue en el mismo milisegundo. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. Esto demuestra la <br><strong>No-localidad.</strong> La ciencia confirma la existencia de esta correlación perfecta, pero la ontología se divide en su interpretación... `;
 
         const rectA = pA.getBoundingClientRect();
         const rectB = pB.getBoundingClientRect();
@@ -248,10 +289,44 @@
     };
 
     btnInterpret.onclick = () => {
-        narration.innerHTML = `<span class="highlight">La Lección de la No-Localidad:</span> Si el entrelazamiento es real, ¿la noción de 'separación' es solo una construcción de nuestros sentidos? La verdadera maravilla no está en el engaño, sino en la verdad experimental que Albert Einstein llamó 'acción fantasmagórica' intentando proteger la lógica clásica. En nuestro próximo tema, veremos cómo intentó salvar esa realidad. Quédate, porque la función de onda de este misterio apenas comienza a expandirse.`;
-        btnGen.disabled = false;
+        narration.innerHTML = `<span class="highlight">La Pregunta Ontológica:</span> Si el entrelazamiento es real, ¿la noción de 'separación' es solo una construcción de nuestros sentidos? Aquí es donde la ciencia llega a su límite y comienza tu postura filosófica. ¿Las partículas ya tenían esa información grabada (como los calcetines de Bertlmann que se eligen en la mañana)? ¿O es que el universo está conectado de una forma no-local donde el espacio es una ilusión? Quédate, porque la función de onda de este misterio apenas comienza a expandirse.`;
         btnInterpret.disabled = true;
     };
+
+    // Lógica del Botón de Reinicio
+    btnReset.onclick = () => {
+        // 1. Limpiar los temporizadores si se reinicia antes de que terminen
+        clearTimeout(timeoutAnim);
+        clearTimeout(timeoutString);
+
+        // 2. Cancelar todas las animaciones nativas de JavaScript
+        document.getAnimations().forEach(anim => anim.cancel());
+
+        // 3. Restaurar estilos iniciales de las partículas y los elementos
+        pA.style.left = "calc(50% - 35px)";
+        pB.style.left = "calc(50% + 5px)";
+        pA.style.top = "50%";
+        pB.style.top = "50%";
+        pA.style.transform = "none";
+        pB.style.transform = "none";
+        
+        // Restauramos los signos de interrogación
+        stateA.innerHTML = "?";
+        stateB.innerHTML = "?";
+
+        string.style.opacity = "0";
+        string.style.width = "0px";
+        ray.style.opacity = "0";
+
+        // 4. Restaurar estado de los botones
+        btnGen.disabled = false;
+        btnMeasure.disabled = true;
+        btnInterpret.disabled = true;
+
+        // 5. Restaurar el texto inicial
+        narration.innerHTML = `<br><strong>Bienvenido al simulador, comenzamos preparando un par de partículas en lo que los físicos llamamos un "estado singlete". Esto significa que el sistema tiene un espín total de cero. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.</strong>`;
+    };
+
 </script>
 
 </body>
