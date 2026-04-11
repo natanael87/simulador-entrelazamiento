@@ -230,7 +230,7 @@
         pB.style.transform = "scale(1.2)";
         string.style.opacity = "0";
 
-        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Cuando el estudiante presiona "Medir Partícula A", el código decide aleatoriamente el estado de A. Pero —y aquí está el rigor científico— el estado de B se asigna automáticamente como el opuesto (conservación del momento angular).`;
+        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Aquí presencias un hecho científico fundamental: al definir el estado de A, la partícula B adquiere instantáneamente el valor opuesto para cumplir con las leyes de conservación. El cambio de estado fue en el mismo milisegundo. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. Esto demuestra la <br><strong>No-localidad.</strong> La ciencia confirma la existencia de esta correlación perfecta, pero la ontología se divide en su interpretación... `;
 
         const rectA = pA.getBoundingClientRect();
         const rectB = pB.getBoundingClientRect();
@@ -248,7 +248,7 @@
     };
 
     btnInterpret.onclick = () => {
-        narration.innerHTML = `<span class="highlight">La Lección de Realismo:</span> Debes hacer notar que la Partícula B cambió su estado en el mismo milisegundo que A. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. <br><strong>Esto demuestra la No-localidad.</strong>`;
+        narration.innerHTML = `<span class="highlight">La Lección de la No-Localidad:</span> mientras Copenhague afirma que la realidad se concreta al medir, interpretaciones como 'Muchos Mundos' sugieren una ramificación del universo, y la 'Onda Piloto' propone una conexión invisible que trasciende el espacio. El fenómeno es un dato; su explicación, el gran debate de la modernidad. La pregunta final es ontológica: ¿es la separación una propiedad real del ser o solo un velo de nuestra percepción limitada?`;
         btnGen.disabled = false;
         btnInterpret.disabled = true;
     };
