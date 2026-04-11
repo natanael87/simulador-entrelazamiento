@@ -69,9 +69,9 @@
         /* Hilo de Entrelazamiento */
         #string {
             position: absolute;
-            height: 4px;
+            height: 5px;
             background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.5s;
             z-index: 5;
         }
@@ -79,8 +79,8 @@
         /* Rayo de Luz Limitador */
         #light-ray {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             background: #ffff00; /* Amarillo puro */
             border-radius: 50%;
             box-shadow: 0 0 15px #ffff00, 0 0 30px #ffcc00;
@@ -248,7 +248,7 @@
     };
 
     btnInterpret.onclick = () => {
-        narration.innerHTML = `<span class="highlight">La Lección de la No-Localidad:</span> mientras Copenhague afirma que la realidad se concreta al medir, interpretaciones como 'Muchos Mundos' sugieren una ramificación del universo, y la 'Onda Piloto' propone una conexión invisible que trasciende el espacio. El fenómeno es un dato; su explicación, el gran debate de la modernidad. La pregunta final es ontológica: ¿es la separación una propiedad real del ser o solo un velo de nuestra percepción limitada?`;
+        narration.innerHTML = `<span class="highlight">La Lección de la No-Localidad:</span> Si el entrelazamiento es real, ¿la noción de 'separación' es solo una construcción de nuestros sentidos? La verdadera maravilla no está en el engaño, sino en la verdad experimental que Albert Einstein llamó 'acción fantasmagórica' intentando proteger la lógica clásica. En nuestro próximo tema, veremos cómo intentó salvar esa realidad. Quédate, porque la función de onda de este misterio apenas comienza a expandirse.`;
         btnGen.disabled = false;
         btnInterpret.disabled = true;
     };
