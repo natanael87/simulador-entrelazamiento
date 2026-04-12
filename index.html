@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio Cuántico: Acción Fantasmagórica en los Confines del Universo</title>
+    <title>Laboratorio Cuántico: Acción Fantasmagórica</title>
     <style>
         :root {
             --quantum-blue: #00d2ff;
@@ -14,156 +14,94 @@
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             color: var(--text-light);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
 
-        /* Fondo de Universo con la imagen galaxia.png */
         .universe-background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: url('galaxia.png'); /* Imagen actualizada */
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-            opacity: 0.8; /* Mantiene la legibilidad de la interfaz */
+            position: absolute; width: 100%; height: 100%;
+            background-image: url('galaxia.png');
+            background-size: cover; background-position: center;
+            z-index: -1; opacity: 0.8;
         }
 
-        /* Contenedor de Partículas (Viewport) */
         #viewport {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
+            flex-grow: 1; display: flex; justify-content: center;
+            align-items: center; position: relative; overflow: hidden;
         }
 
         .particle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-            position: absolute;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px; font-weight: bold; color: black;
+            position: absolute; transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
         }
 
-        /* --- Novedad: Estilos para las Etiquetas A y B --- */
         .particle-label {
-            position: absolute;
-            top: -32px;
-            font-size: 16px;
-            color: white;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 2px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            white-space: nowrap;
+            position: absolute; top: -32px; font-size: 16px; color: white;
+            background: rgba(0, 0, 0, 0.6); padding: 2px 10px;
+            border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Posiciones iniciales juntas */
         #particle-a { background: var(--quantum-blue); box-shadow: 0 0 40px var(--quantum-blue); left: calc(50% - 35px); top: 50%; }
         #particle-b { background: var(--quantum-purple); box-shadow: 0 0 40px var(--quantum-purple); left: calc(50% + 5px); top: 50%; }
 
-        /* Hilo de Entrelazamiento */
+        /* --- AJUSTE: Hilo de Entrelazamiento más brillante --- */
         #string {
             position: absolute;
-            height: 6px;
-            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-purple));
-            opacity: 1;
+            height: 5px; /* Un poco más grueso */
+            background: linear-gradient(90deg, var(--quantum-blue), #fff, var(--quantum-purple));
+            opacity: 0;
             transition: opacity 0.5s;
             z-index: 5;
+            /* Efecto neón de alta intensidad */
+            box-shadow: 0 0 20px var(--quantum-blue), 0 0 10px var(--quantum-purple), inset 0 0 5px white;
+            border-radius: 3px;
         }
 
-        /* Rayo de Luz Limitador */
         #light-ray {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #ffff00; /* Amarillo puro */
-            border-radius: 50%;
+            position: absolute; width: 15px; height: 15px;
+            background: #ffff00; border-radius: 50%;
             box-shadow: 0 0 15px #ffff00, 0 0 30px #ffcc00;
-            opacity: 0;
-            z-index: 6;
-            transition: none;
+            opacity: 0; z-index: 6;
         }
 
-        /* Etiqueta del Rayo de Luz */
         #light-label {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: black;
-            font-weight: bold;
-            font-size: 14px;
-            padding: 2px 8px;
-            background-color: var(--label-bg);
-            border-radius: 5px;
-            white-space: nowrap;
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            color: black; font-weight: bold; font-size: 14px;
+            padding: 2px 8px; background-color: var(--label-bg);
+            border-radius: 5px; white-space: nowrap;
         }
 
-        /* Interfaz de Texto */
         .info-panel {
-            background: rgba(0, 0, 0, 0.9);
-            border-top: 2px solid var(--quantum-blue);
-            padding: 20px;
-            height: 240px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.9); border-top: 2px solid var(--quantum-blue);
+            padding: 20px; height: 240px; display: flex;
+            flex-direction: column; align-items: center; text-align: center;
+            backdrop-filter: blur(10px); position: relative; z-index: 100;
         }
 
         .text-container {
-            max-width: 800px;
-            font-size: 17px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            height: 130px;
-            color: #d1d1d1;
-            overflow-y: auto;
+            max-width: 800px; font-size: 17px; line-height: 1.5;
+            margin-bottom: 20px; height: 130px; color: #d1d1d1; overflow-y: auto;
         }
 
         .controls { display: flex; gap: 15px; }
 
         button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            background: #222;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: 1px solid #444;
-            transition: 0.3s;
+            padding: 10px 20px; border: none; border-radius: 4px;
+            background: #222; color: white; cursor: pointer;
+            font-weight: bold; text-transform: uppercase;
+            border: 1px solid #444; transition: 0.3s;
         }
 
         button:hover:not(:disabled) { background: var(--quantum-blue); color: black; border-color: white; }
         button:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        /* Color específico para el botón de reinicio */
         #btn-reset { border-color: #d9534f; }
         #btn-reset:hover { background: #d9534f; color: white; }
-
         .highlight { color: var(--quantum-blue); font-weight: bold; }
     </style>
 </head>
@@ -187,7 +125,7 @@
 
 <div class="info-panel">
     <div class="text-container" id="narration">
-        <br><strong>Bienvenido al simulador, comenzamos preparando un par de partículas en lo que los físicos llamamos un "estado singlete". Esto significa que el sistema tiene un espín total de cero. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.</strong>
+        <br><strong>Bienvenido al simulador. El sistema tiene un espín total de cero. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.</strong>
     </div>
     <div class="controls">
         <button id="btn-gen">Generar Par</button>
@@ -198,25 +136,18 @@
 </div>
 
 <script>
-    // Referencias a los contenedores principales de las partículas
     const pA = document.getElementById('particle-a');
     const pB = document.getElementById('particle-b');
-    
-    // Referencias específicas a los símbolos que cambian ("?" o "↑"/"↓")
     const stateA = document.getElementById('state-a');
     const stateB = document.getElementById('state-b');
-    
     const string = document.getElementById('string');
     const ray = document.getElementById('light-ray');
     const narration = document.getElementById('narration');
-    const label = document.getElementById('light-label');
-    
     const btnGen = document.getElementById('btn-gen');
     const btnMeasure = document.getElementById('btn-measure');
     const btnInterpret = document.getElementById('btn-interpret');
     const btnReset = document.getElementById('btn-reset');
 
-    // Variables para guardar los temporizadores
     let timeoutString, timeoutAnim;
 
     btnGen.onclick = () => {
@@ -224,11 +155,8 @@
         pB.style.left = "calc(50% + 5px)";
         pA.style.top = "50%";
         pB.style.top = "50%";
-        
-        // Modificamos solo el texto del estado, no la etiqueta superior
         stateA.innerHTML = "?";
         stateB.innerHTML = "?";
-        
         pA.style.transform = "none";
         pB.style.transform = "none";
         string.style.opacity = "0";
@@ -236,8 +164,7 @@
         btnMeasure.disabled = true;
         btnInterpret.disabled = true;
 
-        narration.innerHTML = `<span class="highlight">Fase de Incertidumbre:</span> Las partículas aparecen con un signo de interrogación indicando que no poseen propiedades definidas 'en sí mismas' antes de la medición, sino en una superposición: todas las posibilidades coexisten en un espacio matemático abstracto llamado <br><strong>espacio de configuración</strong>. No es que la información esté "escondida", es que la propiedad misma del espín no está definida aún. La línea que las unirá representa la "función de onda" compartida.`;
-    
+        narration.innerHTML = `<span class="highlight">Fase de Incertidumbre:</span> Las partículas no poseen propiedades definidas 'en sí mismas' antes de la medición, existen en una superposición dentro del <br><strong>espacio de configuración</strong>. La línea brillante representa su conexión cuántica indivisible.`;
 
         timeoutAnim = setTimeout(() => {
             pA.animate([{ left: '15%' }], { duration: 3000, easing: 'ease-out', fill: 'forwards' });
@@ -250,8 +177,11 @@
                 const endX = rectB.left - 10;
                 string.style.width = (endX - startX) + "px";
                 string.style.left = startX + "px";
-                string.style.top = (rectA.top + rectA.height/2) + "px";
-                string.style.opacity = "0.4";
+                string.style.top = (rectA.top + rectA.height/2 - 4) + "px";
+                
+                /* AJUSTE: Opacidad aumentada a 0.9 para máxima visibilidad */
+                string.style.opacity = "0.9"; 
+                
                 btnMeasure.disabled = false;
             }, 3000);
         }, 100);
@@ -262,72 +192,50 @@
     btnMeasure.onclick = () => {
         const resultA = Math.random() > 0.5 ? "↑" : "↓";
         const resultB = resultA === "↑" ? "↓" : "↑";
-
-        // Actualizamos el estado interno sin borrar las etiquetas A y B
         stateA.innerHTML = resultA;
         stateB.innerHTML = resultB;
-        
         pA.style.transform = "scale(1.2)";
         pB.style.transform = "scale(1.2)";
         string.style.opacity = "0";
 
-        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Al definir el estado de A, la partícula B adquiere instantáneamente el valor opuesto para cumplir con las leyes de conservación. El cambio de estado fue en el mismo milisegundo. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. Esto demuestra la <br><strong>No-localidad.</strong> La ciencia confirma la existencia de esta correlación perfecta, pero la ontología se divide en su interpretación... `;
+        narration.innerHTML = `<span class="highlight">El Acto de Medición:</span> Al definir el estado de A, la partícula B adquiere instantáneamente el valor opuesto para cumplir con las leyes de conservación. No hubo tiempo para que A le enviara un WhatsApp o una señal de luz a B. Esto es <br><strong>No-localidad</strong>.`;
 
         const rectA = pA.getBoundingClientRect();
         const rectB = pB.getBoundingClientRect();
         ray.style.left = rectA.right + "px";
         ray.style.top = (rectA.top + rectA.height/2) + "px";
         ray.style.opacity = "1";
-        
-        ray.animate([
-            { left: rectA.right + 'px' },
-            { left: rectB.left + 'px' }
-        ], { duration: 5000, iterations: 1 });
+        ray.animate([{ left: rectA.right + 'px' }, { left: rectB.left + 'px' }], { duration: 5000, iterations: 1 });
 
         btnMeasure.disabled = true;
         btnInterpret.disabled = false;
     };
 
     btnInterpret.onclick = () => {
-        narration.innerHTML = `<span class="highlight">La Pregunta Ontológica:</span> Si el entrelazamiento es real, ¿la noción de 'separación' es solo una construcción de nuestros sentidos? Aquí es donde la ciencia llega a su límite y comienza tu postura filosófica. ¿Las partículas ya tenían esa información grabada (como los calcetines de Bertlmann que se eligen en la mañana)? ¿O es que el universo está conectado de una forma no-local donde el espacio es una ilusión? Quédate, porque la función de onda de este misterio apenas comienza a expandirse.`;
+        narration.innerHTML = `<span class="highlight">La Pregunta Ontológica:</span> ¿Es la 'separación' solo una ilusión de nuestros sentidos? ¿Las partículas ya tenían esa información grabada (como los calcetines de Bertlmann que se eligen en la mañana)? ¿Estaba el resultado ya decidido o el universo está conectado de forma no-local? Aquí es donde la ciencia llega a su límite y comienza tu postura filosófica.`;
         btnInterpret.disabled = true;
     };
 
-    // Lógica del Botón de Reinicio
     btnReset.onclick = () => {
-        // 1. Limpiar los temporizadores si se reinicia antes de que terminen
         clearTimeout(timeoutAnim);
         clearTimeout(timeoutString);
-
-        // 2. Cancelar todas las animaciones nativas de JavaScript
         document.getAnimations().forEach(anim => anim.cancel());
-
-        // 3. Restaurar estilos iniciales de las partículas y los elementos
         pA.style.left = "calc(50% - 35px)";
         pB.style.left = "calc(50% + 5px)";
         pA.style.top = "50%";
         pB.style.top = "50%";
         pA.style.transform = "none";
         pB.style.transform = "none";
-        
-        // Restauramos los signos de interrogación
         stateA.innerHTML = "?";
         stateB.innerHTML = "?";
-
         string.style.opacity = "0";
         string.style.width = "0px";
         ray.style.opacity = "0";
-
-        // 4. Restaurar estado de los botones
         btnGen.disabled = false;
         btnMeasure.disabled = true;
         btnInterpret.disabled = true;
-
-        // 5. Restaurar el texto inicial
-        narration.innerHTML = `<br><strong>Bienvenido al simulador, comenzamos preparando un par de partículas en lo que los físicos llamamos un "estado singlete". Esto significa que el sistema tiene un espín total de cero. Haz clic en "Generar Par" para presenciar la separación de dos partículas entrelazadas hacia los confines del universo.</strong>`;
+        narration.innerHTML = `<br><strong>Bienvenido al simulador. El sistema tiene un espín total de cero. Haz clic en "Generar Par" para comenzar.</strong>`;
     };
-
 </script>
-
 </body>
 </html>
